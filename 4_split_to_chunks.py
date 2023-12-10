@@ -1,18 +1,19 @@
 import os
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
+from tqdm import tqdm
 
-source_folder = 'data/voice'
+source_folder = 'data/audio'
 destination_folder = 'dataset/waves'
 
 if not os.path.exists(destination_folder):
     os.makedirs(destination_folder)
 
 min_silence_len = 500  # In milliseconds
-silence_thresh = -50  # In dB, lowered for more sensitive silence detection
-padding = 200  # In milliseconds, added to the beginning and end of each chunk
+silence_thresh = -40  # In dB, lowered for more sensitive silence detection
+padding = 400  # In milliseconds, added to the beginning and end of each chunk
 
-for filename in os.listdir(source_folder):
+for filename in tqdm(os.listdir(source_folder)):
     if filename.endswith('.wav'):
         audio_number = os.path.splitext(filename)[0]
 

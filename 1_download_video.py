@@ -1,4 +1,5 @@
 from pyyoutube import Api
+from tqdm import tqdm
 from pytube import YouTube
 import os
 
@@ -9,7 +10,7 @@ def get_videos(channel_id):
     channel_info = api.get_channel_info(channel_id=channel_id)
     playlist_id = channel_info.items[0].contentDetails.relatedPlaylists.uploads
     uploads_playlist_items = api.get_playlist_items(
-        playlist_id=playlist_id, count=100, limit=6
+        playlist_id=playlist_id, count=1000, limit=6
     )
     videos = []
     for item in uploads_playlist_items.items:
@@ -21,10 +22,16 @@ def get_videos(channel_id):
 
 def processor(output_directory, channel_id):
     videos = get_videos(channel_id)
-    for video in videos:
+    for video in tqdm(videos):
         url = f"https://www.youtube.com/watch?v={video.id}"
-        print(f'Downloading "{video.snippet.title}"...')
-        YouTube(url).streams.filter(res="360p").first().download(output_directory)
+        if os.path.exists(os.path.join(output_directory, f"{video.snippet.title}.mp4")):
+            print(f'Already downloaded "{video.snippet.title}')
+            continue
+        try:
+            YouTube(url).streams.filter(res="360p").first().download(output_directory)
+        except Exception as e:
+            print(f"Error {e} - {video.snippet.title}")
+            continue
 
 
 if __name__ == "__main__":

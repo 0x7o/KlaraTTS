@@ -2,7 +2,7 @@ import os
 import librosa
 from tqdm import tqdm
 
-dataset_dir = "dataset/waves"
+dataset_dir = "dataset/wavs"
 
 total_length = 0
 min_length = None
