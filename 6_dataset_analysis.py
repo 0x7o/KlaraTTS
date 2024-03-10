@@ -2,7 +2,7 @@ import os
 import librosa
 from tqdm import tqdm
 
-dataset_dir = "dataset/wavs"
+dataset_dir = "data/segments"
 
 total_length = 0
 min_length = None
@@ -17,8 +17,12 @@ for filename in tqdm(os.listdir(dataset_dir)):
         audio_length = librosa.get_duration(y=audio, sr=sr)
 
         total_length += audio_length
-        min_length = min(min_length, audio_length) if min_length is not None else audio_length
-        max_length = max(max_length, audio_length) if max_length is not None else audio_length
+        min_length = (
+            min(min_length, audio_length) if min_length is not None else audio_length
+        )
+        max_length = (
+            max(max_length, audio_length) if max_length is not None else audio_length
+        )
         audio_count += 1
 
 average_length = total_length / audio_count
